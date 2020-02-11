@@ -1,0 +1,1 @@
+var app = angular.module('tsspdclReportsApp', ['720kb.datepicker','angularUtils.directives.dirPagination']);

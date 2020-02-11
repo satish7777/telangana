@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="utf-8"></meta>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+<title>TSSPDCL Reports</title>
+
+<!-- Bootstrap Core CSS -->
+<link th:href="@{js/vendor/bootstrap/css/bootstrap.css}"
+	href="../static/js/vendor/bootstrap/css/bootstrap.css" rel="stylesheet"></link>
+
+<!-- Custom Fonts -->
+<link th:href="@{js/vendor/font-awesome/css/font-awesome.min.css}"
+	href="../static/js/vendor/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet"></link>
+
+<link th:href="@{/css/sdpauth.css}" href="../static/css/sdpauth.css"
+	rel="stylesheet" type="text/css"></link>
+
+
+<link th:href="@{/js/angular-datepicker.css}" href="../static/js/angular-datepicker.css"
+	rel="stylesheet" type="text/css"></link>
+	
+<style type="text/css">
+
+.btn-default {
+    background-color: #f4f4f4;
+    color: #444;
+    border-color: #ddd;
+}
+</style>
+</head>
+
+<body class="fixed-nav sticky-footer bg-dark" id="page-top"
+	ng-app="tsspdclReportsApp" ng-cloak="">
+	<!-- Navigation-->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top"
+		id="mainNav">
+		<a class="navbar-brand" th:href="@{/}" href="/">TSSPDCL Reports</a>
+		<button class="navbar-toggler navbar-toggler-right" type="button"
+			data-toggle="collapse" data-target="#navbarResponsive"
+			aria-controls="navbarResponsive" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarResponsive">
+			<ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+				<li class="nav-item active" data-toggle="tooltip"
+					data-placement="right" title="Account-wise Report"><a class="nav-link"
+					th:href="@{/}" href="/"> <i class="fa fa-fw fa-user-o"></i> <span
+						class="nav-link-text">Account-wise Report</span>
+				</a></li>
+				<li class="nav-item" data-toggle="tooltip" data-placement="right"
+					title="CDR Report"><a class="nav-link" th:href="@{/cdrReport}"
+					href="/roles"> <i class="fa fa-fw fa fa-tasks"></i> <span
+						class="nav-link-text">CDR Report</span>
+				</a></li>
+				<li class="nav-item" data-toggle="tooltip" data-placement="right"
+					title="Live Tracking"><a class="nav-link" th:href="@{/liveReport}"
+					href="/roles"> <i class="fa fa-fw fa fa-line-chart"></i> <span
+						class="nav-link-text">Live Tracking</span>
+				</a></li>
+			</ul>
+			<ul class="navbar-nav sidenav-toggler">
+				<li class="nav-item"><a class="nav-link text-center"
+					id="sidenavToggler"> <i class="fa fa-fw fa-angle-left"></i>
+				</a></li>
+			</ul>
+
+		</div>
+	</nav>
+	
+	
+	
+	<div class="content-wrapper"
+		ng-controller="accountDetailsController as ctrl">
+		<div class="container-fluid">
+			<div class="card mb-3">
+				<div class="card-header">
+					<b><i class="fa fa-table"></i> Account-Wise Report Search</b>
+				</div>
+				<div class="card-body">
+				<div id="searchInputValMsgUser" ng-hide="displayUserSrchValMsg" class="alert alert-danger">{{displayMsg}}</div>
+					<div class="row">
+						<div class="form-group row col-md-12">
+							<div class="form-group col-md-3">
+								<label for="companyName">Account Type</label> <select
+									class="form-control" ng-model="account.selAccType"
+									ng-change="loadSubAccounts()">
+									<option value="">Select One</option>
+									<option value="smpp">SMPP</option>
+									<option value="http">HTTP</option>
+									<option value="web">WEB</option>
+									<option value="all">ALL</option>
+								</select>
+							</div>
+
+							<div class="form-group col-md-3">
+								<label for="companyName">Sub Account Type</label> 
+								<select class="form-control" name="subAccType" ng-model="account.selSubAccType" ng-options="x for x in subAccounts">
+									<option value="">Select</option>
+								</select>
+							</div>
+							
+							<div class="form-group col-md-3">
+								<label for="companyName">Start Date</label> 
+									<datepicker date-format="yyyy-MM-dd" date-min-limit="{{minDate}}" date-max-limit="{{maxLimit}}" selector="form-control" button-prev="<i class='fa fa-arrow-left'></i>" button-next="<i class='fa fa-arrow-right'></i>">
+									  <input class="form-control" ng-model="account.startDate" type="text" placeholder="Enter Start Date"/>
+									</datepicker>
+							</div>
+							<div class="form-group col-md-3">
+								<label for="companyName">End Date</label> 
+									<datepicker date-format="yyyy-MM-dd" date-min-limit="{{minDate}}" date-max-limit="{{maxLimit}}" selector="form-control" button-prev="<i class='fa fa-arrow-left'></i>" button-next="<i class='fa fa-arrow-right'></i>">
+									  <input class="form-control" ng-model="account.endDate" type="text" placeholder="Enter End Date"/>
+									</datepicker>
+							</div>
+						</div>
+						<div class="col-lg-12">
+						<div>
+							<a href="javascript:void(0);" ng-click="searchAccountWiseReport();"
+							   class="btn btn-default"><i class="fa fa-search"></i> Search</a>
+						</div>
+					</div>
+					</div>
+
+
+		
+					<!-- <div ng-show="!ctrl.users.length">No users created in the system</div> 
+                <div ng-show="ctrl.users.length" class="table-responsive">-->
+					
+				</div>
+			</div>
+		</div>
+		
+		<div class="container-fluid">
+			<div class="card mb-3">
+				<div class="card-header">
+					<b><i class="fa fa-table"></i> Account-Wise Report List</b>
+					<button style="float: right;" class="btn btn-default" ng-click="exportAccountAction()" title="Download Excel">
+						<i class="fa fa-file-excel-o" style="color: green;" aria-hidden="true" title="Download Excel"></i></button>
+				</div>
+				<div class="card-body">
+						<div class="table-responsive">
+						<table class="table table-bordered" id="dataTable" width="100%"
+							cellspacing="0">
+							<thead>
+								<tr style="background-color: #cccccc;cursor: pointer;">
+									<th ng-click="sort('accountName')" style="text-align:-webkit-center;">Account Name
+										<span class="glyphicon sort-icon" 
+					                              	ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+									</th>
+									<th ng-click="sort('inputDay')" style="text-align:-webkit-center;">Day
+										<span class="glyphicon sort-icon" 
+					                              	ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+									</th>
+									<th ng-click="sort('submitted')" style="text-align:-webkit-center;">Submitted
+										<span class="glyphicon sort-icon" 
+					                              	ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+									</th>
+									<th ng-click="sort('delivered')" style="text-align:-webkit-center;">Delivered
+										<span class="glyphicon sort-icon" 
+					                              	ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+									</th>
+									<th ng-click="sort('submitFailed')" style="text-align:-webkit-center;">Failed
+										<span class="glyphicon sort-icon" 
+					                              	ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+							<tr ng-show="noData"><td class="center" colspan="8"><b> No Records Available</b></td></tr>
+								<tr dir-paginate="a in accountWiseReport|orderBy:sortKey:reverse|filter:search|itemsPerPage:10" align="center">
+									<td>{{a.accountName}}</td>
+									<td>{{a.inputDay}}</td>
+									<td>{{a.submitted}}</td>
+									<td>{{a.delivered}}</td>
+									<td>{{a.submitFailed}}</td>
+								</tr>
+							</tbody>
+						</table>
+						<dir-pagination-controls 
+					       max-size="10"
+					       direction-links="true"
+					       boundary-links="true" >
+					    </dir-pagination-controls>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /.container-fluid-->
+		<!-- /.content-wrapper-->
+		<footer class="sticky-footer">
+			<div class="container">
+				<div class="text-center">
+					<small>Copyright © Netxcell 2017</small>
+				</div>
+			</div>
+		</footer>
+		<!-- Bootstrap core JavaScript-->
+		<script th:src="@{js/vendor/jquery/jquery.min.js}"
+			src="../static/vendor/jquery/jquery.min.js"></script>
+		<script th:src="@{js/vendor/popper/popper.min.js}"
+			src="../static/vendor/popper/popper.min.js"></script>
+		<script th:src="@{js/vendor/bootstrap/js/bootstrap.js}"
+			src="../static/vendor/bootstrap/js/bootstrap.js"></script>
+		<!-- Core plugin JavaScript-->
+		<script th:src="@{js/vendor/jquery-easing/jquery.easing.min.js}"
+			src="../static/vendor/jquery-easing/jquery.easing.min.js"></script>
+		<!-- Page level plugin JavaScript-->
+		<script th:src="@{js/vendor/datatables/jquery.dataTables.js}"
+			src="../static/vendor/datatables/jquery.dataTables.js"></script>
+		<script th:src="@{js/vendor/datatables/dataTables.bootstrap4.js}"
+			src="../static/vendor/datatables/dataTables.bootstrap4.js"></script>
+		<!-- Custom scripts for all pages-->
+		<script th:src="@{js/sdpauth.js}" src="../static/js/sdpauth.js"></script>
+		<!-- Custom scripts for this page-->
+		<script
+			src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+				<script th:src="@{js/bootstrap.min.js}"
+			src="../static/js/bootstrap.min.js"></script>
+			<script th:src="@{js/dirPagination.js}" src="../static/js/dirPagination.js"></script>
+		<script th:src="@{scripts/app.js}" src="../static/scripts/app.js"></script>
+		<script th:src="@{js/controllers/accountDetailsController.js}"
+			src="../static/js/controllers/accountDetailsController.js"></script>
+	
+<script th:src="@{js/angular-datepicker.js}" src="../static/js/angular-datepicker.js"></script>
+<script th:src="@{js/vendor/alasql/alasql.min.js}" src="../static/js/vendor/alasql/alasql.min.js"></script>
+<script th:src="@{js/vendor/alasql/xlsx.core.min.js}" src="../static/js/vendor/alasql/xlsx.core.min.js"></script>
+	</div>
+</body>
+</html>
