@@ -31,7 +31,7 @@
 		<lombok.version>1.16.12</lombok.version>
 		<swagger.version>1.5.13</swagger.version>
 		<springfox.version>2.6.1</springfox.version>
-		<apache.http.commons.version>4.5.2</apache.http.commons.version>
+		<apache.http.commons.version>4.5.13</apache.http.commons.version>
 		<apache.commons.lang.version>3.5</apache.commons.lang.version>
 		<mockito.version>2.3.4</mockito.version>
 		<h2.version>1.4.193</h2.version>
