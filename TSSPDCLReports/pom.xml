@@ -34,7 +34,7 @@
 		<apache.http.commons.version>4.5.2</apache.http.commons.version>
 		<apache.commons.lang.version>3.5</apache.commons.lang.version>
 		<mockito.version>2.3.4</mockito.version>
-		<h2.version>1.4.193</h2.version>
+		<h2.version>2.0.206</h2.version>
 		<swagger2markup.version>1.0.0</swagger2markup.version>
 		<nekohtml.version>1.9.22</nekohtml.version>
 		<asciidoctor.version>1.5.0-alpha.11</asciidoctor.version>
